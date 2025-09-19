@@ -76,7 +76,7 @@ const Hero = () => {
   }, []);
 
   const services = [
-    { name: "iTax", icon: "/iTax.png", angle: 0 },
+    { name: "iTax", icon: "/itax.png", angle: 0 },
     { name: "E-Tims", icon: "/etims.webp", angle: 60 },
     { name: "M-Service", icon: "/mservice.webp", angle: 120 },
     { name: "i-cms", icon: "/icms.png", angle: 180 },
