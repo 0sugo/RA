@@ -21,8 +21,16 @@ import {
   Search,
 } from "lucide-react";
 import Image from "next/image";
-import { Globe, User, Briefcase, Landmark  } from "lucide-react";
-import { } from "lucide-react";
+import { Globe, User, Briefcase, Landmark } from "lucide-react";
+import {} from "lucide-react";
+import { getServices } from "@/data/contents";
+import { getServicesNow } from "@/data/contents";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import NewsComponent from "./NewsComponent";
+import ServicesSection from "./ServicesSection";
+import Hero from "./Hero";
+import FloatingNav from "./FloatingNav";
+
 // #ff0613
 // #d80000
 const KRALandingPage = () => {
@@ -31,8 +39,25 @@ const KRALandingPage = () => {
   const [activeTab, setActiveTab] = useState("videos");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [ussdActiveTab, setUssdActiveTab] = useState("ussd");
-
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [servicesList, setServicesList] = useState([]);
+  const [servicesListNow, setServicesListNow] = useState([]);
   const [beadAngle, setBeadAngle] = useState(0);
+
+  useEffect(() => {
+    console.log("useEffect started...");
+    getServicesNow().then((res) => {
+      console.log("Full API response:", res);
+      setServicesListNow(res.data);
+    });
+  }, []);
+
+  //  useEffect(() => {
+  //   getServices().then((res) => {
+  //     console.log("Fetched titles:", res.data.map(s => s.title));
+  //     setServicesList(res.data);
+  //   });
+  // }, []);
 
   useEffect(() => {
     let angle = 0;
@@ -49,15 +74,14 @@ const KRALandingPage = () => {
     return () => cancelAnimationFrame(frame);
   }, []);
 
-const services = [
-  { name: "iTax", icon: "/iTax.webp", angle: 0 },
-  { name: "E-Tims", icon: "/etims.webp", angle: 60 },
-  { name: "M-Service", icon: "/mservice.webp", angle: 120 },
-  { name: "i-Bid", icon: "/kraLion.png", angle: 180 },
-  { name: "KCMS", icon: "/kraLion.png", angle: 240 },
-  { name: "E-Slip", icon: "/kraLion.png", angle: 300 },
-];
-
+  const services = [
+    { name: "iTax", icon: "/iTax.webp", angle: 0 },
+    { name: "E-Tims", icon: "/etims.webp", angle: 60 },
+    { name: "M-Service", icon: "/mservice.webp", angle: 120 },
+    { name: "i-cms", icon: "/icms.png", angle: 180 },
+    { name: "EGMS", icon: "/egms.png", angle: 240 },
+    { name: "CRM", icon: "/kra-crm-logo.jpg", angle: 300 },
+  ];
 
   const slides = [
     { title: "iTax Portal", image: "/api/placeholder/600/400" },
@@ -124,43 +148,69 @@ const services = [
   };
 
   const states = ["Home", "Individual", "Business", "Investor", "Agent"];
-  const Individual = ["Pin registration","PIN Registration","Filing & Paying","Importing & Exporting","Special Needs","Alternative Dispute Resolution(ADR)","Diaspora Affairs","Legacy Ledger Reconciliation"];
-  const Business = ["Companies & Partnerships","Compliance & Penalties","Not-For-Profit","Societies","Taxation for Societies","PIN Registration","Types of Taxes","Filing & Paying Taxes","Incentives & Exemptions","Authorized Economic Operators (AEO)","Alternative Dispute Resolution","eTIMS"];
-  const Investor =["Incentives & Certification","PIN Registration","Investment Procedures"];
-  const agents = ["Customs Agent","Tax Agents"];
+  const Individual = [
+    "Pin registration",
+    "PIN Registration",
+    "Filing & Paying",
+    "Importing & Exporting",
+    "Special Needs",
+    "Alternative Dispute Resolution(ADR)",
+    "Diaspora Affairs",
+    "Legacy Ledger Reconciliation",
+  ];
+  const Business = [
+    "Companies & Partnerships",
+    "Compliance & Penalties",
+    "Not-For-Profit",
+    "Societies",
+    "Taxation for Societies",
+    "PIN Registration",
+    "Types of Taxes",
+    "Filing & Paying Taxes",
+    "Incentives & Exemptions",
+    "Authorized Economic Operators (AEO)",
+    "Alternative Dispute Resolution",
+    "eTIMS",
+  ];
+  const Investor = [
+    "Incentives & Certification",
+    "PIN Registration",
+    "Investment Procedures",
+  ];
+  const agents = ["Customs Agent", "Tax Agents"];
 
-const stateContent = {
-  Home: [
-    { name: "e-Filing", icon: FileText },
-    { name: "e-Payment", icon: CreditCard },
-    { name: "Tax Registration", icon: Building2 },
-    { name: "Customs", icon: Globe },
-  ],
+  const stateContent = {
+    Home: [
+      { name: "e-Filing", icon: FileText },
+      { name: "e-Payment", icon: CreditCard },
+      { name: "Tax Registration", icon: Building2 },
+      { name: "Customs", icon: Globe },
+    ],
 
-  Individual: [
-    { name: "PIN Registration", icon: User },
-    { name: "Filing & Paying", icon: FileText },
-    { name: "Special Needs", icon: Globe },
-    { name: "Diaspora Affairs", icon: Landmark },
-  ],
+    Individual: [
+      { name: "PIN Registration", icon: User },
+      { name: "Filing & Paying", icon: FileText },
+      { name: "Special Needs", icon: Globe },
+      { name: "Diaspora Affairs", icon: Landmark },
+    ],
 
-  Business: [
-    { name: "Companies & Partnerships", icon: Building2 },
-    { name: "Compliance & Penalties", icon: CreditCard },
-    { name: "Types of Taxes", icon: FileText },
-    { name: "eTIMS", icon: Globe },
-  ],
+    Business: [
+      { name: "Companies & Partnerships", icon: Building2 },
+      { name: "Compliance & Penalties", icon: CreditCard },
+      { name: "Types of Taxes", icon: FileText },
+      { name: "eTIMS", icon: Globe },
+    ],
 
-  Investor: [
-    { name: "Incentives & Certification", icon: Briefcase },
-    { name: "Investment Procedures", icon: Building2 },
-  ],
+    Investor: [
+      { name: "Incentives & Certification", icon: Briefcase },
+      { name: "Investment Procedures", icon: Building2 },
+    ],
 
-  Agent: [
-    { name: "Customs Agent", icon: Globe },
-    { name: "Tax Agent", icon: User },
-  ],
-};
+    Agent: [
+      { name: "Customs Agent", icon: Globe },
+      { name: "Tax Agent", icon: User },
+    ],
+  };
 
   const [active, setActive] = useState(0);
 
@@ -174,10 +224,10 @@ const stateContent = {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <Image src="/logoKRA.webp" alt="" width={200} height={200} />
+            <Image src="/kra.png" alt="" width={200} height={200} />
 
             {/* Desktop Menu */}
-            <div className="hidden md:block">
+            {/* <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
                 <a
                   href="#about"
@@ -212,6 +262,61 @@ const stateContent = {
                 <button className="bg-[#ff0613] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700">
                   Online Services
                 </button>
+
+                <div
+                  className={"flex items-center bg-white rounded-full shadow-md overflow-hidden transition-all duration-500 max-w-xs px-4 opacity-100"}>
+                  <Search className="text-gray-500 mr-2 shrink-0" />
+                  <input
+                    type="text"
+                    placeholder="Search KRA services..."
+                    className={"flex-grow focus:outline-none text-gray-700 bg-transparent py-2 transition-opacity duration-500 opacity-100"}
+                  />
+                </div>
+              </div>
+            </div> */}
+
+            <div className="hidden md:block">
+              <div className="ml-10 flex items-baseline space-x-4">
+                <a
+                  href="#about"
+                  className="text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  About Us
+                </a>
+                <a
+                  href="#procurement"
+                  className="text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  E-Procurement
+                </a>
+                <a
+                  href="#careers"
+                  className="text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Careers
+                </a>
+                <a
+                  href="#news"
+                  className="text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  News Centre
+                </a>
+                <a
+                  href="#itax"
+                  className="text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  iTax
+                </a>
+
+                {/* Search styled like nav */}
+                <div className="flex border border-[#d80000] px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-red-600 transition-colors">
+                  <Search className="w-4 h-4 mr-2" />
+                  <input
+                    type="text"
+                    placeholder="Search KRA services..."
+                    className="bg-transparent focus:outline-none placeholder-gray-500 text-sm"
+                  />
+                </div>
               </div>
             </div>
 
@@ -273,11 +378,9 @@ const stateContent = {
         </div>
       </nav>
 
-      <section className="bg-gradient-to-br py-12 lg:py-20">
-        <div className="absolute inset-0 flex items-center justify-center -z-10">
-          <div className="w-[400px] h-[400px] rounded-full bg-red-300/30 blur-3xl animate-blob"></div>
-        </div>
-
+      {/* <section className="bg-gradient-to-br py-12 lg:py-20 bg-cover bg-center " style={{ backgroundImage: "url('/contact.webp')",backgroundRepeat: "no-repeat", }}> */}
+      {/* hero old section */}
+      {/* <section className="bg-gradient-to-br py-12 lg:py-20 bg-cover bg-center ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
@@ -286,7 +389,7 @@ const stateContent = {
                   Kenya Revenue
                   <span className="text-[#ff0613] block">Authority</span>
                 </h1>
-                <p className="text-xl text-gray-600 leading-relaxed">
+                <p className="text-xl text-[#000000] leading-relaxed">
                   Enhancing revenue collection and facilitating voluntary tax
                   compliance through quality service delivery
                 </p>
@@ -301,47 +404,11 @@ const stateContent = {
                   Learn More
                 </button>
               </div>
-
-              <div className="pt-8 flex items-center justify-around gap-4">
-                <button
-                  onClick={prevState}
-                  className="p-2 rounded-full hover:bg-red-100 transition"
-                >
-                  <ChevronLeft className="w-5 h-5 text-red-600" />
-                </button>
-
-                <div className="flex gap-10 overflow-x-auto scrollbar-hide">
-                  {states.map((state, idx) => (
-                    <button
-                      key={state}
-                      onClick={() => setActive(idx)}
-                      className={`relative flex items-center font-medium transition-colors ${
-                        active === idx
-                          ? "text-[#d80000]"
-                          : "text-gray-700 hover:text-gray-900"
-                      }`}
-                    >
-                      {state}
-                      {active === idx && (
-                        <span className="absolute left-1/2 -translate-x-1/2 -bottom-0.5 h-1 w-6 bg-[#d80000] rounded-full"></span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  onClick={nextState}
-                  className="p-2 rounded-full hover:bg-red-100 transition"
-                >
-                  <ChevronRight className="w-5 h-5 text-red-600" />
-                </button>
-              </div>
             </div>
 
-            <div className="relative flex justify-center items-center">
+            <div className="relative flex justify-end items-center">
               <div className="relative w-80 h-80 lg:w-96 lg:h-96">
                 <div className="absolute inset-0 flex items-center justify-center">
-                  {/* <div className="absolute inset-0 flex items-center justify-center bg-[#d80000] rounded-full"> */}
                   <div className="absolute inset-0 flex items-center justify-center bg-[#d80000] rounded-full">
                     <div className="relative border-white border-2 p-9 rounded-full flex items-center justify-center">
                       <div className="absolute inset-0 flex items-center  justify-center">
@@ -355,17 +422,8 @@ const stateContent = {
                           width={250}
                           height={250}
                         />
-
                       </div>
 
-                      {/* <div className="w-38 h-38 rounded-full flex items-center justify-center shadow-2xl">
-                        <Image
-                          src="/macot-preview.png"
-                          alt="lion logo"
-                          width={250}
-                          height={250}
-                        />
-                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -387,8 +445,13 @@ const stateContent = {
                       }}
                     >
                       <div className="text-center">
-                        {/* <div className="text-2xl">{service.icon}</div> */}
-                        <Image src={service.icon} alt={service.name} width={25} height={25} />
+                        
+                        <Image
+                          src={service.icon}
+                          alt={service.name}
+                          width={45}
+                          height={45}
+                        />
 
                         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                           {service.name}
@@ -397,16 +460,27 @@ const stateContent = {
                     </div>
                   );
                 })}
-
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
+      <Hero />
 
-      <section className="py-12 bg-gray-50 relative" >
-         <div className="absolute bottom-0 left-0 w-64 h-64 bg-no-repeat bg-contain pointer-events-none" style={{ backgroundImage: "url('/public/vecs.svg')" }}/>
-        <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-red-900/10 backdrop-blur-3xl px-6 py-6 w-[80%] mx-auto rounded-3xl">
+
+      {/* <ServicesSection /> */}
+      
+
+      {/* <section className="py-12 bg-gray-50 relative">
+        <div
+          className="absolute bottom-0 left-0 w-64 h-64 bg-no-repeat bg-contain pointer-events-none"
+        />
+        <div className="absolute -top-6 left-1/2 -translate-x-1/2  backdrop-blur-3xl px-6 py-6 w-[80%] mx-auto rounded-3xl">
+
+          <div className="absolute inset-0 bg-gradient-to-br from-[#ff0613]/20 via-black/30 to-[#d80000]/20 backdrop-blur-md rounded-3xl"></div>
+
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent rounded-3xl"></div>
+
           <div className="w-full mb-4">
             <div className="flex items-center bg-white rounded-full shadow-md px-4 py-5">
               <Search className="text-gray-500 mr-2" />
@@ -417,79 +491,110 @@ const stateContent = {
               />
             </div>
           </div>
-       
 
-         <div className="p-4">
-
-          <div className="flex justify-around items-center text-black">
-            {stateContent[states[active]].map((item, idx) => {
-              const Icon = item.icon;
-              return (
-                <div key={idx} className="flex flex-col items-center">
-                  <Icon className="h-10 w-10 mb-1" />
-                  <span className="text-sm">{item.name}</span>
-                </div>
-              );
-            })}
-          </div>
-
-        </div>
-
-
-        </div>
-
-        <div className=" max-w-7xl pt-58 pb-4 mx-auto px-4 sm:px-6 lg:px-8 bg-gray-50 ">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Our Digital Platforms
-            </h2>
-            <p className="text-gray-600">
-              Explore our comprehensive suite of digital tax services
-            </p>
-          </div>
-
-          <div className="relative">
-            <div className="overflow-hidden rounded-lg">
-              <div
-                className="flex transition-transform duration-300 ease-in-out"
-                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-              >
-                {slides.map((slide, index) => (
-                  <div key={index} className="w-full flex-shrink-0">
-                    <div className="bg-white rounded-lg shadow-lg p-6 mx-2">
-                      <div className="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                        <span className="text-gray-500">
-                          {slide.title} Screenshot
-                        </span>
-                      </div>
-                      <h3 className="text-xl font-semibold text-center">
-                        {slide.title}
-                      </h3>
-                    </div>
+          <div className="p-4">
+            <div className="flex justify-around items-center text-black">
+              {stateContent[states[active]].map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <div key={idx} className="flex flex-col items-center">
+                    <Icon className="h-10 w-10 mb-1" />
+                    <span className="text-sm">{item.name}</span>
                   </div>
-                ))}
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section> */}
+
+      {/* <section className="py-12 bg-gray-50 relative">
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-no-repeat bg-contain pointer-events-none" />
+
+        <div className="absolute -top-6 left-1/2 -translate-x-1/2 backdrop-blur-3xl px-6 py-6 w-[80%] mx-auto rounded-3xl overflow-hidden">
+          <div className="absolute inset-0 bg-black opacity-10 backdrop-blur-md rounded-3xl"></div>
+
+          <div className="relative p-4 z-10">
+            <div className="flex justify-between items-center mb-12">
+              <div className="flex items-center justify-around gap-4">
+                <div className="flex gap-10 overflow-x-auto scrollbar-hide">
+                  {states.map((state, idx) => (
+                    <button
+                      key={state}
+                      onClick={() => setActive(idx)}
+                      className={`relative flex items-center font-medium transition-colors ${
+                        active === idx
+                          ? "text-[#d80000]"
+                          : "text-gray-700 hover:text-gray-900"
+                      }`}
+                    >
+                      {state}
+                      {active === idx && (
+                        <span className="absolute left-1/2 -translate-x-1/2 -bottom-0.5 h-1 w-6 bg-[#d80000] rounded-full"></span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+
+              <div className="flex items-center gap-2">
+                <div
+                  className={`flex items-center bg-white rounded-full shadow-md overflow-hidden transition-all duration-500 
+                  ${
+                    searchOpen
+                      ? "max-w-xs px-4 opacity-100"
+                      : "max-w-0 px-0 opacity-0"
+                  }`}
+                >
+                  <Search className="text-gray-500 mr-2 shrink-0" />
+                  <input
+                    type="text"
+                    placeholder="Search KRA services..."
+                    className={`flex-grow focus:outline-none text-gray-700 bg-transparent py-2 transition-opacity duration-500 ${
+                      searchOpen ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
+                </div>
+
+                <button
+                  onClick={() => setSearchOpen((prev) => !prev)}
+                  className="p-2 rounded-full bg-white hover:bg-white/30 transition"
+                >
+                  <Search className="w-5 h-5 text-black" />
+                </button>
               </div>
             </div>
 
-            <button
-              onClick={prevSlide}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-50"
-            >
-              <ChevronDown className="h-5 w-5 rotate-90 text-gray-600" />
-            </button>
-            <button
-              onClick={nextSlide}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-50"
-            >
-              <ChevronDown className="h-5 w-5 -rotate-90 text-gray-600" />
-            </button>
+            <div className="flex justify-around items-center text-black">
+              {stateContent[states[active]].map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <div key={idx} className="flex flex-col items-center">
+                    <Icon className="h-10 w-10 mb-1 text-black" />
+                    <span className="text-sm text-black font-semibold">
+                      {item.name}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
+      </section> */}
+      <FloatingNav />
+
+      <section className="pt-44">
+         <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-12 text-center">
+            Latest News & Updates
+          </h2>
+        <NewsComponent />
+
       </section>
 
-     
 
-      <section className="py-16 bg-white">
+
+      {/* <section className="py-30 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
@@ -536,9 +641,9 @@ const stateContent = {
             </button>
           </div>
         </div>
-      </section>
+      </section> */}
 
-      <section className="py-16 bg-gray-50">
+      {/* <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
@@ -644,18 +749,89 @@ const stateContent = {
             </div>
           )}
         </div>
+      </section> */}
+
+      <section className="py-20 bg-gray-50">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            Tutorials & Important Links
+          </h2>
+          <p className="text-gray-600 text-lg">
+            Learn how to use our services with step-by-step guides
+          </p>
+        </div>
+        <div className=" bg-gray-50 relative flex w-full">
+          {/* Black background block */}
+          <div className="bg-black w-1/2 min-h-[550px] rounded-xl relative p-8 flex flex-col justify-between">
+            <div className="pt-10 pl-28">
+              <div className="mb-8">
+                <h2 className="text-lg lg:text-2xl font-bold text-white mb-4">
+                  Tutorials & Important Links
+                </h2>
+                <p className="text-white/80 text-lg max-w-sm">
+                  Learn how to use our services with step-by-step guides
+                </p>
+              </div>
+
+              <ol className="space-y-4 text-white/60 text-base list-inside">
+                <li className="hover:text-[#d80000] transition-colors cursor-pointer underline">
+                  File Income Tax Return (IT1 Option - Excel)
+                </li>
+                <li className="hover:text-[#d80000] transition-colors cursor-pointer underline">
+                  File a NIL Return
+                </li>
+                <li className="hover:text-[#d80000] transition-colors cursor-pointer underline">
+                  File Withholding Income Tax Returns
+                </li>
+                <li className="hover:text-[#d80000] transition-colors cursor-pointer underline">
+                  File an Amended Income Tax Return
+                </li>
+              </ol>
+
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 mt-10">
+                <button className="bg-[#ff0613] text-white px-4 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                  Visit Our News Centre
+                </button>
+                <button className="border-2 border-red-600 text-red-600 px-4 py-3 rounded-lg font-semibold hover:bg-red-50 transition-colors flex items-center justify-center">
+                  <Play className="mr-2 h-5 w-5" />
+                  Watch KRA TV
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* White floating card */}
+          <div className="absolute top-13 left-1/2 transform -translate-x-1/4 bg-white rounded-3xl shadow-xl p-6 w-[750px] max-w-5xl h-[450px]">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">
+              File Income Tax Return (IT1 Option - Excel)
+            </h3>
+
+            <div className="relative w-full h-[90%]">
+              <iframe
+                className="absolute top-0 left-0 w-full h-full rounded-xl"
+                src="https://www.youtube.com/embed/H9VwiO506Ss?start=12"
+                title="YouTube video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="bg-[#ff0613] text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div className="flex justify-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative">
+            <div className="flex justify-center ">
               {ussdActiveTab === "ussd" ? (
                 <Image
                   src="/mobile.svg"
                   alt="USSD Mobile"
                   height={600}
                   width={600}
+                  className="absolute -top-50"
                 />
               ) : (
                 <Image
@@ -663,6 +839,8 @@ const stateContent = {
                   alt="WhatsApp Mobile"
                   height={600}
                   width={600}
+                  className="absolute -top-50"
+
                 />
               )}
             </div>
@@ -729,21 +907,23 @@ const stateContent = {
         </div>
       </section>
 
-      <footer className="bg-gray-900 text-white py-16">
+      <footer className="bg-[#424242] text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Top grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             {/* Newsletter */}
             <div className="max-w-sm">
-              <h3 className="text-lg font-semibold mb-4">Newsletter</h3>
-              <p className="text-gray-400">
+              <h3 className="text-lg font-semibold mb-4 text-white">
+                Newsletter
+              </h3>
+              <p className="text-gray-400 mb-4">
                 Stay updated with KRA news and updates
               </p>
-
               <form className="flex w-full max-w-sm">
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="flex-1 px-4 py-2 rounded-l-md text-white focus:outline-none focus:ring-2 focus:ring-red-500"
+                  className="flex-1 px-4 py-2 rounded-l-md bg-[white] text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#ff0613]"
                 />
                 <button
                   type="submit"
@@ -754,12 +934,14 @@ const stateContent = {
               </form>
             </div>
 
-            {/* Address */}
+            {/* Contact */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
-              <div className="space-y-3 text-gray-400">
+              <h3 className="text-lg font-semibold mb-4 text-white">
+                Contact Us
+              </h3>
+              <div className="space-y-4 text-gray-400">
                 <div className="flex items-start">
-                  <MapPin className="h-5 w-5 mr-2 mt-0.5" />
+                  <MapPin className="h-5 w-5 mr-3 mt-1 text-[#ff0613]" />
                   <span>
                     Times Tower, Haile Selassie Ave
                     <br />
@@ -769,11 +951,11 @@ const stateContent = {
                   </span>
                 </div>
                 <div className="flex items-center">
-                  <Phone className="h-5 w-5 mr-2" />
+                  <Phone className="h-5 w-5 mr-3 text-[#ff0613]" />
                   <span>+254 20 281 7000</span>
                 </div>
                 <div className="flex items-center">
-                  <Mail className="h-5 w-5 mr-2" />
+                  <Mail className="h-5 w-5 mr-3 text-[#ff0613]" />
                   <span>info@kra.go.ke</span>
                 </div>
               </div>
@@ -781,25 +963,39 @@ const stateContent = {
 
             {/* About KRA */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">About KRA</h3>
-              <ul className="space-y-2 text-gray-400">
+              <h3 className="text-lg font-semibold mb-4 text-white">
+                About KRA
+              </h3>
+              <ul className="space-y-3 text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-white">
+                  <a
+                    href="#"
+                    className="hover:text-[#ff0613] transition-colors"
+                  >
                     Who we are
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white">
+                  <a
+                    href="#"
+                    className="hover:text-[#ff0613] transition-colors"
+                  >
                     Corporate Plan
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white">
+                  <a
+                    href="#"
+                    className="hover:text-[#ff0613] transition-colors"
+                  >
                     Privacy Statement
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white">
+                  <a
+                    href="#"
+                    className="hover:text-[#ff0613] transition-colors"
+                  >
                     Policies
                   </a>
                 </li>
@@ -808,25 +1004,39 @@ const stateContent = {
 
             {/* Helping Taxpayers */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Helping Taxpayers</h3>
-              <ul className="space-y-2 text-gray-400">
+              <h3 className="text-lg font-semibold mb-4 text-white">
+                Helping Taxpayers
+              </h3>
+              <ul className="space-y-3 text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-white">
+                  <a
+                    href="#"
+                    className="hover:text-[#ff0613] transition-colors"
+                  >
                     iTax Tutorials
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white">
+                  <a
+                    href="#"
+                    className="hover:text-[#ff0613] transition-colors"
+                  >
                     FAQs
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white">
+                  <a
+                    href="#"
+                    className="hover:text-[#ff0613] transition-colors"
+                  >
                     Complaints
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white">
+                  <a
+                    href="#"
+                    className="hover:text-[#ff0613] transition-colors"
+                  >
                     Tax Calculator
                   </a>
                 </li>
@@ -834,7 +1044,8 @@ const stateContent = {
             </div>
           </div>
 
-          <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+          {/* Bottom copyright */}
+          <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
             <p>&copy; KRA 2025. All rights reserved.</p>
           </div>
         </div>
